@@ -7,3 +7,7 @@
 .groovy
 .settings/
 target/
+build/
+*.ipr
+*.iws
+.gradle/
