@@ -1,0 +1,7 @@
+description = 'CQ Component Plugin Annotations'
+
+dependencies {
+    compile "org.codehaus.plexus:plexus-utils:3.0.8"
+    compile "org.javassist:javassist:3.17.1-GA"
+    testCompile "junit:junit:4.8.2"
+}

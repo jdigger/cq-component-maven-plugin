@@ -1,0 +1,6 @@
+rootProject.name = 'cq-component-plugin'
+include ':cq-component-annotations'
+include ':cq-component-maven-plugin'
+
+project(':cq-component-annotations').projectDir = "$rootDir/cq-component-annotations" as File
+project(':cq-component-maven-plugin').projectDir = "$rootDir/cq-component-maven-plugin" as File

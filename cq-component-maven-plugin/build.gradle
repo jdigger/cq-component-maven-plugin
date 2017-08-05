@@ -1,0 +1,21 @@
+description = "CQ Component Maven Plugin"
+
+dependencies {
+    compile "org.apache.maven:maven-plugin-api:2.0"
+    compile "org.codehaus.plexus:plexus-utils:3.0.8"
+    compile "org.apache.maven:maven-archiver:2.2"
+    compile "org.sonatype.plexus:plexus-build-api:0.0.7"
+    compile "org.apache.maven:maven-artifact:2.0"
+    compile "commons-io:commons-io:2.4"
+    compile "org.apache.commons:commons-compress:1.4.1"
+    compile "org.javassist:javassist:3.17.1-GA"
+    compile project(":cq-component-annotations")
+    compile "org.reflections:reflections:0.9.9-RC1"
+    compile gradleApi()
+    compile "org.codehaus.groovy:groovy-all:2.2.1"
+    compile "org.slf4j:slf4j-api:1.7.2"
+    testCompile "junit:junit:4.8.2"
+    compileOnly "org.apache.maven.plugin-tools:maven-plugin-annotations:3.2", {
+        exclude group: "org.apache.maven", module: "maven-artifact"
+    }
+}
