@@ -1,3 +1,7 @@
+plugins {
+    id 'com.jfrog.bintray' version '1.7.3' apply false
+}
+
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'maven'
@@ -6,8 +10,10 @@ allprojects {
     version = '4.3.1.1'
 }
 
-subprojects {
+subprojects { proj ->
     apply plugin: 'java'
+    apply plugin: 'com.jfrog.bintray'
+
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
 
@@ -21,12 +27,35 @@ subprojects {
 
     }
 
-    artifacts.archives packageSources
+    artifacts.default packageSources
+//    artifacts.archives packageSources
 
     repositories {
         maven { url "http://repo.gradle.org/gradle/libs-releases-local" }
         maven { url "http://repo.spring.io/ext-release-local" }
         maven { url "http://repo.maven.apache.org/maven2" }
+        jcenter()
     }
 
+    bintray {
+        user = bintrayUser
+        key = bintrayKey
+        configurations = ['archives']
+        publish = true
+        pkg {
+            repo = 'java-lib'
+            name = proj.name
+//            userOrg = 'bintray_user'
+            userOrg = user
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/jdigger/cq-component-maven-plugin.git'
+            version {
+//                name = version
+//                desc = 'CQ Component Plugin'
+                released = new Date()
+                vcsTag = version
+//                attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+            }
+        }
+    }
 }

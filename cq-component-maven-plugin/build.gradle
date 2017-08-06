@@ -20,4 +20,5 @@ dependencies {
     compileOnly "org.apache.maven.plugin-tools:maven-plugin-annotations:3.2", {
         exclude group: "org.apache.maven", module: "maven-artifact"
     }
+    compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3"
 }
