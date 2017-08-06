@@ -15,11 +15,16 @@
  */
 package com.citytechinc.cq.component.gradle
 
+import com.citytechinc.cq.component.editconfig.registry.DefaultInPlaceEditorRegistry
+import com.citytechinc.cq.component.editconfig.registry.InPlaceEditorRegistry
+import com.citytechinc.cq.component.touchuidialog.widget.registry.DefaultTouchUIWidgetRegistry
+import com.citytechinc.cq.component.touchuidialog.widget.registry.TouchUIWidgetRegistry
 import javassist.ClassPool
 import javassist.CtClass
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.TaskAction
 import org.reflections.Reflections
 
@@ -30,6 +35,9 @@ import com.citytechinc.cq.component.maven.util.ComponentMojoUtil
 import com.citytechinc.cq.component.maven.util.LogSingleton
 
 class GenerateComponentsTask extends DefaultTask{
+
+	@InputFile
+	File archiveFile
 
 	@TaskAction
 	def generateComponents(){
@@ -45,28 +53,37 @@ class GenerateComponentsTask extends DefaultTask{
 		//TODO: Implement excludedDependences
 		List<CtClass> classList = ComponentMojoUtil.getAllComponentAnnotations(classPool, reflections, [] as Set)
 
-		WidgetRegistry widgetRegistry = new DefaultWidgetRegistry(classPool, classLoader, reflections)
+		WidgetRegistry widgetRegistry = new DefaultWidgetRegistry(classPool, classLoader, reflections, [])
+
+		TouchUIWidgetRegistry touchUIWidgetRegistry = new DefaultTouchUIWidgetRegistry(classPool, classLoader, reflections, [])
+
+		InPlaceEditorRegistry inPlaceEditorRegistry = new DefaultInPlaceEditorRegistry(classPool, classLoader, reflections)
 
 		Map<String, ComponentNameTransformer> transformers = ComponentMojoUtil.getAllTransformers(classPool,
 				reflections)
 
-		ComponentNameTransformer transformer = transformers.get(project.componentPlugin.transformerName)
+		def componentPlugin = project.componentPlugin
+
+		ComponentNameTransformer transformer = transformers.get(componentPlugin.transformerName)
 
 		if (transformer == null) {
 			throw new GradleException("The configured transformer wasn't found")
 		}
 
-		ComponentMojoUtil.buildArchiveFileForProjectAndClassList(classList, widgetRegistry, classLoader, classPool,
-				project.buildDir, project.componentPlugin.componentPathBase, project.componentPlugin.componentPathSuffix,
-				project.componentPlugin.defaultComponentGroup, getArchiveFileForProject(), getTempArchiveFileForProject(), transformer, componentPlugin.generateTouchUiDialogs, componentPlugin.generateClassicUiDialogs)
+		ComponentMojoUtil.buildArchiveFileForProjectAndClassList(classList, widgetRegistry, touchUIWidgetRegistry, inPlaceEditorRegistry, classLoader, classPool,
+				project.buildDir, componentPlugin.componentPathBase, componentPlugin.componentPathSuffix,
+				componentPlugin.defaultComponentGroup, getArchiveFileForProject(), getTempArchiveFileForProject(), transformer, componentPlugin.generateTouchUiDialogs, componentPlugin.generateClassicUiDialogs)
 	}
 
 	def File getArchiveFileForProject() {
-		File buildDirectory = new File(project.buildDir,"distributions")
+		if (archiveFile == null) {
+			File buildDirectory = new File(project.buildDir,"distributions")
 
-		String zipFileName = project.name + "-" + project.version + ".zip"
+			String zipFileName = project.name + "-" + project.version + ".zip"
 
-		return new File(buildDirectory, zipFileName)
+			archiveFile = new File(buildDirectory, zipFileName)
+		}
+		return archiveFile
 	}
 
 	def File getTempArchiveFileForProject() {
