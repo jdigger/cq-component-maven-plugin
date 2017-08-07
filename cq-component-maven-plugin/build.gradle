@@ -21,4 +21,9 @@ dependencies {
         exclude group: "org.apache.maven", module: "maven-artifact"
     }
     compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3"
+
+    testCompile 'com.netflix.nebula:nebula-test:6.0.1', {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
 }

@@ -7,7 +7,7 @@ allprojects {
     apply plugin: 'maven'
 
     group = 'com.citytechinc.cq.cq-component-plugin'
-    version = '4.3.1.1'
+    version = '4.3.1.2'
 }
 
 subprojects { proj ->
@@ -27,8 +27,7 @@ subprojects { proj ->
 
     }
 
-    artifacts.default packageSources
-//    artifacts.archives packageSources
+    artifacts.archives packageSources
 
     repositories {
         maven { url "http://repo.gradle.org/gradle/libs-releases-local" }
@@ -45,16 +44,12 @@ subprojects { proj ->
         pkg {
             repo = 'java-lib'
             name = proj.name
-//            userOrg = 'bintray_user'
             userOrg = user
             licenses = ['Apache-2.0']
             vcsUrl = 'https://github.com/jdigger/cq-component-maven-plugin.git'
             version {
-//                name = version
-//                desc = 'CQ Component Plugin'
                 released = new Date()
                 vcsTag = version
-//                attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
             }
         }
     }
